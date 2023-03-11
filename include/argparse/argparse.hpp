@@ -1213,6 +1213,19 @@ public:
     }
   }
 
+  /* Flush this parser, and all subsequent subparsers, leaving
+  * 'clean slate' state of arguments.
+  */
+  void flush_args() {
+    for (auto it = std::begin(m_subparser_map); it != std::end(m_subparser_map); ++it) {
+      // invoke flush on subparser
+      it->second->get().flush_args();
+    }
+
+    m_subparser_used = std::map<std::string_view, bool>();
+    m_is_parsed = false;
+  }
+
   /* Call parse_known_args_internal - which does all the work
    * Then, validate the parsed arguments
    * This variant is used mainly for testing

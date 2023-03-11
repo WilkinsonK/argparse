@@ -251,18 +251,21 @@ TEST_CASE("Check subcommand_used after parse" * test_suite("subparsers")) {
   program.add_subparser(command_2);
 
   SUBCASE("command 1") {
+    program.flush_args();
     program.parse_args({"test", "add"});
     REQUIRE(program.subcommand_used() == "add");
     REQUIRE(program.subcommand_used() != "clean");
   }
 
   SUBCASE("command 2") {
+    program.flush_args();
     program.parse_args({"test", "clean"});
     REQUIRE(program.subcommand_used() == "clean");
     REQUIRE(program.subcommand_used() != "add");
   }
 
   SUBCASE("none") {
+    program.flush_args();
     program.parse_args({"test"});
     REQUIRE(program.subcommand_used() != "add");
     REQUIRE(program.subcommand_used() != "clean");
