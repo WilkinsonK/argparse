@@ -1288,6 +1288,12 @@ public:
     return is_subcommand_used(subparser.m_program_name);
   }
 
+  /* Getter that returns the name of the subcommand used.
+  */
+  auto subcommand_used() const {
+    return m_subparser_used.begin()->first;
+  }
+
   /* Indexing operator. Return a reference to an Argument object
    * Used in conjuction with Argument.operator== e.g., parser["foo"] == true
    * @throws std::logic_error in case of an invalid argument name
