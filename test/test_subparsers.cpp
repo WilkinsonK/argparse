@@ -237,3 +237,34 @@ TEST_CASE("Check is_subcommand_used after parse" * test_suite("subparsers")) {
     REQUIRE(program.is_subcommand_used(command_2) == false);
   }
 }
+
+TEST_CASE("Check subcommand_used after parse" * test_suite("subparsers")) {
+  argparse::ArgumentParser command_1("add");
+
+  argparse::ArgumentParser command_2("clean");
+  command_2.add_argument("--fullclean")
+        .default_value(false)
+        .implicit_value(true);
+
+  argparse::ArgumentParser program("test");
+  program.add_subparser(command_1);
+  program.add_subparser(command_2);
+
+  SUBCASE("command 1") {
+    program.parse_args({"test", "add"});
+    REQUIRE(program.subcommand_used() == "add");
+    REQUIRE(program.subcommand_used() != "clean");
+  }
+
+  SUBCASE("command 2") {
+    program.parse_args({"test", "clean"});
+    REQUIRE(program.subcommand_used() == "clean");
+    REQUIRE(program.subcommand_used() != "add");
+  }
+
+  SUBCASE("none") {
+    program.parse_args({"test"});
+    REQUIRE(program.subcommand_used() != "add");
+    REQUIRE(program.subcommand_used() != "clean");
+  }
+}
